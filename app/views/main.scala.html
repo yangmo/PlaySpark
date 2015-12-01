@@ -1,0 +1,13 @@
+@(title: String)(content: Html)
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>@title</title>
+        @views.html.setting.includes()
+    </head>
+    <body>
+        @content
+    </body>
+</html>
