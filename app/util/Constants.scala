@@ -7,6 +7,6 @@ import java.text.SimpleDateFormat
  */
 object Constants {
 
-  val DATA_BASE = "/Users/moyang/data/"
+  val DATA_BASE = "/Users/data/"
   val DATE_FORMAT = new SimpleDateFormat("YYYY-MM-DD")
 }

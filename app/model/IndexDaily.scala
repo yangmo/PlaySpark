@@ -35,19 +35,10 @@ object IndexDaily {
     import SparkUtil.sqlContext.implicits._
 
     SparkUtil.sc.parallelize(records).toDF()
-      .write.mode(SaveMode.Append).save(Constants.DATA_BASE +"index/" + "sz399001" + ".parquet")
+      .write.mode(SaveMode.Append).save(Constants.DATA_BASE +"index/" + records.take(1)(0).index_code + ".parquet")
   }
 
   def main(args: Array[String]): Unit = {
-    //	sz399006.csv
-    loadIndex("/Users/moyang/springapp/data/index data/sh000001.csv")
-
-    loadIndex("/Users/moyang/springapp/data/index data/sh000300.csv")
-
-
-    loadIndex("/Users/moyang/springapp/data/index data/sz399005.csv")
-    loadIndex("/Users/moyang/springapp/data/index data/sz399006.csv")
-
-    println(SparkUtil.sqlContext.read.parquet("/Users/moyang/data/index/sz399001.parquet").collect().size)
+    println(SparkUtil.sqlContext.read.parquet(Constants.DATA_BASE   + "index/sz399006.parquet").collect().size)
   }
 }

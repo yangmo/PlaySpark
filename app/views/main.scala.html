@@ -8,6 +8,8 @@
         @views.html.setting.includes()
     </head>
     <body>
+        <div id="chartContainer" style="width:100%;height:300px;"></div>
         @content
+        @views.html.stockTemplate.candleStick()
     </body>
 </html>
