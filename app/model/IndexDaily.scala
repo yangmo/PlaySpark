@@ -7,12 +7,45 @@ import util.{SparkUtil, Constants, FileUtil}
  * Created by moyang on 15/11/29.
  */
 case class IndexDaily(index_code: String, date: String, open: Double, close: Double,low: Double, high: Double
-                 ,volume: Long, money: Double, change: Double) {
+                 ,volume: Long, money: Double, change: Double) extends Daily{
 
 
   override def toString: String = {
     Array(index_code, date, open, close, low, high, volume, money, change)
       .reduce(_ + "\t" + _).toString
+  }
+
+  def getId(): String = {
+    index_code
+  }
+  def adjustedOpen(): Double = {
+    open
+  }
+  def adjustedClose(): Double = {
+    close
+  }
+
+  def adjustedHigh():Double = {
+    high
+  }
+
+  def adjustedLow(): Double = {
+    low
+  }
+
+  def append(): Unit = {
+    if(index_code == "sz399905" || index_code == "sh000016") {
+      return
+    }
+    val root = Constants.DATA_BASE + Constants.INDEX + index_code + ".parquet"
+    val sorted = SparkUtil.sqlContext.read.parquet(root).collect().map(x=>IndexDaily.lineToRecord(x.mkString(",")))
+      .sortWith((x, y) => x.date < y.date).last
+    val date1 = sorted.date
+    if(date1 > date) {
+      println("previous max is " + date1 + " current date is " + date)
+    } else {
+      SparkUtil.appendIndex(this)
+    }
   }
 }
 

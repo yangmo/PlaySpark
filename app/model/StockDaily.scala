@@ -11,14 +11,45 @@ import scala.tools.scalap.scalax.util.StringUtil
 case class StockDaily (index_code: String, date: String, open: Double, close: Double,low: Double, high: Double
                   ,change: Double, volume: Long, money: Double, traded_market_value: Long,market_value: Long
                   ,turnover: Double, adjust_price: Double, report_type: String, report_date: String, PE_TTM: Double
-                  ,PS_TTM: Double, PC_TTM: Double, PB: Double) {
+                  ,PS_TTM: Double, PC_TTM: Double, PB: Double) extends Daily{
+
+  def getId(): String = {
+    index_code
+  }
+  def adjustedOpen(): Double = {
+    open * adjust_price / close
+  }
+  def adjustedClose(): Double = {
+    adjust_price
+  }
+
+  def adjustedHigh():Double = {
+    high * adjust_price / close
+  }
+
+  def adjustedLow(): Double = {
+    low * adjust_price / close
+  }
+
+  def append(): Unit = {
+    val root = Constants.DATA_BASE + Constants.STOCK + index_code.takeRight(6) + ".parquet"
+    val sorted = SparkUtil.sqlContext.read.parquet(root).collect().map(x=>IndexDaily.lineToRecord(x.mkString(",")))
+      .sortWith((x, y) => x.date < y.date).last
+    val date1 = sorted.date
+    if(date1 > date) {
+      println(index_code + " previous max is " + date1 + " current date is " + date)
+    } else {
+      SparkUtil.appendStock(this)
+    }
+  }
 }
 
+
 object StockDaily {
+
   def lineToRecord(line: String): StockDaily = {
 
     val array = line.split(",")
-println(line)
     val index_code = array(0)
     val date = array(1)
     val open = array(2).toDouble

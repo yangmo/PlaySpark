@@ -1,5 +1,8 @@
-@(message: String)
+@import model._
+@(daily: Array[_ <: model.Daily])
 
 @main("Welcome to Play") {
+
+    @views.html.stockTemplate.candleStick(daily)
 
 }

@@ -8,5 +8,7 @@ import java.text.SimpleDateFormat
 object Constants {
 
   val DATA_BASE = "/Users/data/"
+  val INDEX = "index/"
+  val STOCK = "stock/"
   val DATE_FORMAT = new SimpleDateFormat("YYYY-MM-DD")
 }
