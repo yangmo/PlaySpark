@@ -10,7 +10,7 @@ window.onload = function () {
 	var chart = new CanvasJS.Chart("chartContainer",
 	{
 		title:{
-			text: "@{daily(0).getId() + " " + daily(0).date +  "-" + daily.last.date()}",
+			text: "@{daily(0).getId() + " " + daily(0).date +  " 至 " + daily.last.date()}",
 		},
 		exportEnabled: true,
 		axisY: {

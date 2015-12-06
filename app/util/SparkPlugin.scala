@@ -13,6 +13,10 @@ class SparkPlugin extends Plugin {
 
   }
 
+  override def onStart(): Unit = {
+    SparkUtil.getSC()
+  }
+
   override def onStop(): Unit = {
     SparkUtil.stop()
   }

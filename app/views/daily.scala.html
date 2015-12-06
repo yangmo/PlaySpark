@@ -1,0 +1,6 @@
+@import util._
+@(daily: Array[_ <: model.Daily])
+
+@main("SparkPlay") {
+    @views.html.stockTemplate.candleStick(daily)
+}

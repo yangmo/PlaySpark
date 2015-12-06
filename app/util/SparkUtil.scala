@@ -42,6 +42,11 @@ object SparkUtil {
 
   }
 
+  def load(id: String, start: String, end: String): Array[_ <: model.Daily] = {
+    load(id).filter(_.date >= start).filter(_.date <= end)
+
+  }
+
   def load(id: String): Array[_ <: model.Daily] = {
     if(INDEX_CODES.contains(id)) {
       return loadIndex(id)
@@ -51,14 +56,17 @@ object SparkUtil {
 
   def loadStock(stockId: String): Array[StockDaily]= {
     sqlContext.read.parquet(Constants.DATA_BASE + "stock/" + stockId + ".parquet").collect()
-      .map(x=>StockDaily.lineToRecord(x.mkString(","))).sortWith((x, y) => x.date < y.date)
+      .map(x=>StockDaily.lineToRecord(x.mkString(","))).sortBy(_.date)
   }
 
 
   def loadIndex(indexId: String): Array[IndexDaily]= {
     sqlContext.read.parquet(Constants.DATA_BASE + Constants.INDEX + indexId + ".parquet").collect()
-      .map(x=>IndexDaily.lineToRecord(x.mkString(","))).sortWith((x, y) => x.date < y.date)
+      .map(x=>IndexDaily.lineToRecord(x.mkString(","))).sortBy(_.date)
   }
 
 
+  def main(args: Array[String]): Unit = {
+    load("sh000001", "2014-01-01", "2014-12-31").foreach(println)
+  }
 }
