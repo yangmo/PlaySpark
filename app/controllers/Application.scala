@@ -7,7 +7,7 @@ import util._
 object Application extends Controller {
 
   def index = Action {
-    Ok(views.html.index(SparkUtil.load("600352").takeRight(200)))
+    Ok(views.html.index(SparkUtil.load("600000").takeRight(200)))
 
   }
 

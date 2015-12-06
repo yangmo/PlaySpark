@@ -23,11 +23,16 @@ object DailyAppendUtil {
   def appendDailyStock(data: String): Unit = {
     println(data)
     FileUtil.read(data)
-      .split("\n").tail
+      .split("\n").tail.par.par
       .foreach(
         x => {
+          println(x)
           val index = StockDaily.lineToRecord(x)
-          index.append
+          try {
+            index.append
+          } catch {
+            case t: Throwable => println(t.getCause)
+          }
         }
       )
   }
@@ -40,7 +45,7 @@ object DailyAppendUtil {
 
   def main(args: Array[String]): Unit = {
     val root = "/Users/moyang/Downloads/data/"
-    new File(root).list().filter(!_.contains("full")).sorted.foreach(x =>{ appendDaily(root + x)})
+    new File(root).list().filter(!_.contains("full")).filter(x=>{val k = "[0-9]{8}".r.findFirstIn(x).get;k.toInt>20151130}).sorted.foreach(x =>{ appendDaily(root + x)})
     //appendDaily("/Users/moyang/Downloads/data/trading-data-push-20151116")
   }
 }
